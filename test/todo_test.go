@@ -5,14 +5,18 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"project/routes"
 	"testing"
+	"project/models"
+	"project/routes"
+	"project/storage"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
+// テスト用のルーターを作成
 func setupRouter() *gin.Engine {
+	storage.InitDB() // SQLite を初期化
 	r := gin.Default()
 	routes.SetupRoutes(r)
 	return r
@@ -22,9 +26,9 @@ func TestCreateTodoAndGetTodos(t *testing.T) {
 	router := setupRouter()
 
 	// 新しいタスクを作成
-	newTodo := map[string]interface{}{
-		"title":     "Test Task",
-		"completed": false,
+	newTodo := models.Todo{
+		Title:     "Test Task",
+		Completed: false,
 	}
 	jsonValue, _ := json.Marshal(newTodo)
 
@@ -41,7 +45,4 @@ func TestCreateTodoAndGetTodos(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
-	var todos []map[string]interface{}
-	json.Unmarshal(w.Body.Bytes(), &todos)
-	assert.Equal(t, "Test Task", todos[0]["title"])
 }

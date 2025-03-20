@@ -2,10 +2,15 @@ package main
 
 import (
 	"project/routes"
+	"project/storage"
+
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	// SQLite データベースを初期化
+	storage.InitDB()
+
 	r := gin.Default()
 
 	// ルートを設定

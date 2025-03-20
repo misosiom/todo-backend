@@ -1,8 +1,12 @@
 package models
 
+import (
+	"gorm.io/gorm"
+)
+
 // タスクのデータ構造
 type Todo struct {
-	ID        int    `json:"id"`
+	gorm.Model
 	Title     string `json:"title" binding:"required"`
 	Completed bool   `json:"completed"`
 }

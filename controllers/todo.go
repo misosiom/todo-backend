@@ -11,7 +11,12 @@ import (
 
 // すべてのタスクを取得
 func GetTodos(c *gin.Context) {
-	c.JSON(http.StatusOK, storage.GetAllTodos())
+	todos, err := storage.GetAllTodos()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, todos)
 }
 
 // ID でタスクを取得
@@ -38,7 +43,11 @@ func CreateTodo(c *gin.Context) {
 		return
 	}
 
-	todo := storage.AddTodo(newTodo)
+	todo, err := storage.AddTodo(newTodo)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusCreated, todo)
 }
 
