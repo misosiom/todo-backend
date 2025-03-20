@@ -17,9 +17,9 @@ func main() {
 
 	// CORS を設定
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://todo-frontend-sigma-sepia.vercel.app/"}, // フロントエンドのURLを指定
+		AllowOrigins:     []string{"https://todo-frontend-sigma-sepia.vercel.app"}, // フロントエンドのURLを指定
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Content-Type"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
 
