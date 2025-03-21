@@ -1,10 +1,11 @@
 package main
 
 import (
-	"project/routes"
-	"project/storage"
 	"log"
 	"os"
+	"project/routes"
+	"project/storage"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -16,12 +17,7 @@ func main() {
 	r := gin.Default()
 
 	// CORS を設定
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://todo-frontend-sigma-sepia.vercel.app"}, // フロントエンドのURLを指定
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		AllowCredentials: true,
-	}))
+	r.Use(setupCORS())
 
 	// ルートを設定
 	routes.SetupRoutes(r)
@@ -35,4 +31,18 @@ func main() {
 	// サーバー起動
 	log.Println("Starting server on port " + port)
 	r.Run(":" + port)
+}
+
+func setupCORS() gin.HandlerFunc {
+	frontendURL := os.Getenv("FRONTEND_ORIGIN")
+	if frontendURL == "" {
+		frontendURL = "http://localhost:3000"
+	}
+
+	return cors.New(cors.Config{
+		AllowOrigins:     []string{frontendURL}, // フロントエンドのURLを指定
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
 }
